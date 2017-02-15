@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Base.h"
+#include "Entity.h"
+#include <iostream>
+using namespace std;
+using namespace sfw;
 
 class PlayerController
 {
 
 public:
-	float speed = 10, turnSpeed = 1;
+	float speed = 100, turnSpeed = 10;
 
 	float shotTimer = 0.0f;
 	bool shotRequest = false;
@@ -22,6 +26,8 @@ public:
 		if (sfw::getKey('D'))
 			rb->addTorque(-turnSpeed);
 
+
+
 		shotTimer -= dt;
 		if (sfw::getKey(' ') && shotTimer < 0)
 		{
@@ -29,6 +35,7 @@ public:
 			shotTimer = 0.86f;
 		}
 		else shotRequest = false;
+
 	}
 
 };

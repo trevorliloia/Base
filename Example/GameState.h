@@ -3,7 +3,8 @@
 #include "sfwdraw.h"
 #include "BaseState.h"
 #include "Factory.h"
-
+#include <iostream>
+using namespace std;
 
 /*
 	The gamestate represents a discrete container of all that is 
@@ -19,9 +20,8 @@
 class GameState : public BaseState
 {
 	Factory factory;
-	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font;
+	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_bar;
 	ObjectPool<Entity>::iterator currentCamera;
-
 public:
 	virtual void init()
 	{
@@ -30,6 +30,7 @@ public:
 		spr_ship = sfw::loadTextureMap("../res/ship.png");
 		spr_roid = sfw::loadTextureMap("../res/rock.png");
 		spr_font = sfw::loadTextureMap("../res/font.png",32,4);
+		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
 	}
 
 	virtual void play()
@@ -49,6 +50,8 @@ public:
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
+
+		
 	}
 
 	virtual void stop()
@@ -80,7 +83,14 @@ public:
 			// controller update
 			if (e.transform && e.rigidbody && e.controller)
 			{
+				if (getKey('F'))
+				{
+					char t[80];
+					cin >> t;
+					e.text->setString(t);
+				}
 				e.controller->poll(&e.transform, &e.rigidbody, dt);
+				currentCamera->transform->setGlobalPosition(e.transform->getGlobalPosition() + 300);
 				if (e.controller->shotRequest) // controller requested a bullet fire
 				{
 					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition()  + e.transform->getGlobalUp()*48,
@@ -152,6 +162,7 @@ public:
 			if (e.transform && e.text)
 				e.text->draw(&e.transform, cam);
 
+		drawTexture(spr_bar, 75, 300, 150, 600, 0, true, 0, BLACK);
 
 #ifdef _DEBUG
 		for each(auto &e in factory)

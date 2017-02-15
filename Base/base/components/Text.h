@@ -16,6 +16,11 @@ public:
 	void setString(const char *src) { strcpy_s(m_characters, 80, src); }
 	Text() { setString(""); }
 
+	const char operator=(char *a_t)
+	{
+		setString(a_t);
+	}
+
 	void draw(const Transform *T, const mat3 &cam)
 	{
 		auto glob = cam * T->getGlobalTransform();

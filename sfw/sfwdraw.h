@@ -194,6 +194,8 @@ namespace sfw
 
 	// input using keycodes (see GLFW reference, most characters will work as per normal)
 	bool getKey(unsigned keycode);
+	
+	
 
 	// 0 for right, 1 for left
 	bool getMouseButton(unsigned mousekeycode);

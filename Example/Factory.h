@@ -92,7 +92,7 @@ public:
 		e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
 		e->text->off_scale = vec2{.5f,.5f};
-		e->text->setString("Player1");
+		e->text->setString("ship");
 
 		e->transform->setLocalScale(vec2{48,48});
 
