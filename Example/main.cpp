@@ -2,7 +2,7 @@
 #include "sfwdraw.h"
 #include "GameState.h"
 #include "BattleState.h"
-
+#include "Input.h"
 
 /*
 	The main function should be used for application state management.
@@ -26,6 +26,7 @@ void main()
 
 	while (sfw::stepContext())
 	{
+		kpc::poll();
 		switch (Gstate)
 		{
 		case 0: // Enter Game
@@ -45,7 +46,7 @@ void main()
 			break;
 		}
 		
-
+		if (kpc::getKeyDown('Q')) { std::cout << "Q\n"; }
 		//gs.next(); Determine the ID of the next state to transition to.
 	}
 

@@ -4,6 +4,7 @@
 #include "BaseState.h"
 #include "Factory.h"
 #include "Menu.h"
+#include "UIText.h"
 #include <iostream>
 using namespace std;
 using namespace sfw;
@@ -25,14 +26,15 @@ class BattleState : public BaseState
 	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_bar;
 	Player player;
 	ObjectPool<Entity>::iterator currentCamera;
-	
+	Transform menuP;
+	UIText menuI[4];
+	Menu baseM;
 public:
 	bool paused = false;
 	bool done = false;
 	bool turn = true;
 	int timers[16];
-
-	Menu base;
+	
 
 	virtual void init(Player p)
 	{
@@ -43,6 +45,12 @@ public:
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
 		player = p;
+		menuI[0].setString("Attack");
+		menuI[1].setString("Tech");
+		menuI[2].setString("Items");
+		menuI[3].setString("Tactics");
+		menuP.setGlobalPosition(vec2{ 20,500 });
+		baseM = Menu(menuP, 4, menuI, true, true, spr_font);
 	}
 
 	virtual void play()
@@ -134,7 +142,6 @@ public:
 					if (e.text)
 					{
 						char buffer[80];
-						e.enemy->name;
 
 						sprintf_s(buffer, "%s\n%d", e.enemy->name, e.enemy->hp);
 						e.text->setString(buffer);
@@ -160,14 +167,7 @@ public:
 				
 			}
 
-
-			// Physics system!
-			// You'll want to extend this with custom collision responses
-
-
-			
-			
-			//p
+			baseM.navigate();
 		}
 	}
 
@@ -187,7 +187,7 @@ public:
 			if (e.transform && e.text)
 				e.text->draw(&e.transform, cam);
 
-		drawTexture(spr_bar, 75, 300, 150, 600, 0, true, 0, BLACK);
+		drawTexture(spr_bar, 75, 300, 150, 600, 0, true, 0, CYAN);
 
 		for (int i = 0; i < player.enemyCount; i++)
 		{
@@ -203,6 +203,8 @@ public:
 		{
 			drawLine(25 + k, 25, 25 + k, 45, WHITE);
 		}
+
+		baseM.draw();
 
 #ifdef _DEBUG
 		for each(auto &e in factory)
