@@ -29,6 +29,18 @@ class BattleState : public BaseState
 	Transform menuP;
 	UIText menuI[4];
 	Menu baseM;
+
+	UIText attackText[3];
+	Menu attackM;
+
+	UIText techText[3];
+	Menu techM;
+
+	UIText itemText[1];
+	Menu itemM;
+
+	UIText tacText[4];
+	Menu tacM;
 public:
 	bool paused = false;
 	bool done = false;
@@ -51,6 +63,25 @@ public:
 		menuI[3].setString("Tactics");
 		menuP.setGlobalPosition(vec2{ 20,500 });
 		baseM = Menu(menuP, 4, menuI, true, true, spr_font);
+
+		attackText[0].setString("Slash");
+		attackText[1].setString("Pierce");
+		attackText[2].setString("Charge");
+		attackM = Menu(menuP, 3, attackText, false, false, spr_font);
+
+		techText[0].setString("Fire Rush");
+		techText[1].setString("Spark Cut");
+		techText[2].setString("Heat Burst");
+		techM = Menu(menuP, 3, techText, false, false, spr_font);
+
+		itemText[0].setString("No Items");
+		itemM = Menu(menuP, 1, itemText, false, false, spr_font);
+
+		tacText[0].setString("Defend");
+		tacText[1].setString("Defend?");
+		tacText[2].setString("Defend!");
+		tacText[3].setString("Defend...");
+		tacM = Menu(menuP, 4, tacText, false, false, spr_font);
 	}
 
 	virtual void play()
@@ -168,6 +199,75 @@ public:
 			}
 
 			baseM.navigate();
+			attackM.navigate();
+			techM.navigate();
+			itemM.navigate();
+			tacM.navigate();
+
+			if (baseM.menuitems[0].pick)
+			{
+				baseM.menuitems[0].pick = false;
+				attackM.isOpen = true;
+				attackM.isVisible = true;
+				baseM.isOpen = false;
+				baseM.isVisible = false;
+			}
+
+			if (baseM.menuitems[1].pick)
+			{
+				baseM.menuitems[1].pick = false;
+				techM.isOpen = true;
+				techM.isVisible = true;
+				baseM.isOpen = false;
+				baseM.isVisible = false;
+			}
+
+			if (baseM.menuitems[2].pick)
+			{
+				baseM.menuitems[2].pick = false;
+				itemM.isOpen = true;
+				itemM.isVisible = true;
+				baseM.isOpen = false;
+				baseM.isVisible = false;
+			}
+
+			if (baseM.menuitems[3].pick)
+			{
+				baseM.menuitems[3].pick = false;
+				tacM.isOpen = true;
+				tacM.isVisible = true;
+				baseM.isOpen = false;
+				baseM.isVisible = false;
+			}
+
+			if (attackM.isOpen && kpc::getKeyDown('Q'))
+			{
+				attackM.isOpen = false;
+				attackM.isVisible = false;
+				baseM.isOpen = true;
+				baseM.isVisible = true;
+			}
+			if (techM.isOpen && kpc::getKeyDown('Q'))
+			{
+				techM.isOpen = false;
+				techM.isVisible = false;
+				baseM.isOpen = true;
+				baseM.isVisible = true;
+			}
+			if (itemM.isOpen && kpc::getKeyDown('Q'))
+			{
+				itemM.isOpen = false;
+				itemM.isVisible = false;
+				baseM.isOpen = true;
+				baseM.isVisible = true;
+			}
+			if (tacM.isOpen && kpc::getKeyDown('Q'))
+			{
+				tacM.isOpen = false;
+				tacM.isVisible = false;
+				baseM.isOpen = true;
+				baseM.isVisible = true;
+			}
 		}
 	}
 
@@ -205,6 +305,10 @@ public:
 		}
 
 		baseM.draw();
+		attackM.draw();
+		techM.draw();
+		itemM.draw();
+		tacM.draw();
 
 #ifdef _DEBUG
 		for each(auto &e in factory)

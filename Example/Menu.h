@@ -5,6 +5,7 @@
 #include "Factory.h"
 #include "sfwdraw.h"
 #include "UIText.h"
+#include "Input.h"
 #include <iostream>
 using namespace std;
 using namespace sfw;
@@ -12,10 +13,12 @@ using namespace base;
 
 class Menu
 {
+
 	struct MenuItem
 	{
 		int option;
 		UIText item;
+		bool pick = false;
 	};
 public:
 	Transform menuPos;
@@ -47,19 +50,19 @@ public:
 	{
 		if (isVisible && isOpen)
 		{
-			if (getKey('W') && selected > 0 && key == false)
+			if (kpc::getKeyDown('W') && selected > 0)
 			{
-				key = true;
 				selected -= 1;
-
 			}
-			else if (getKey('S') && selected < (maxItem - 1) && key == false)
+			else if (kpc::getKeyDown('S') && selected < (maxItem - 1))
 			{
-				key = true;
 				selected += 1;
-
 			}
-			key = false;
+
+			if (kpc::getKeyDown('E'))
+			{
+				menuitems[selected].pick = true;
+			}
 		}
 	}
 
