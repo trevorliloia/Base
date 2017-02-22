@@ -3,6 +3,7 @@
 #include "Base.h"
 
 #include "PlayerController.h"
+#include "Enemy.h"
 
 using namespace base;
 
@@ -20,6 +21,7 @@ public:
 
 	// example of a component in this project
 	ObjectPool<PlayerController>::iterator controller;
+	ObjectPool<Enemy>::iterator enemy;
 
 	void onFree()
 	{
@@ -32,5 +34,6 @@ public:
 		text.free();
 
 		controller.free();
+		enemy.free();
 	}
 };

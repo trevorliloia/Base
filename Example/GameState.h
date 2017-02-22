@@ -21,9 +21,13 @@ class GameState : public BaseState
 {
 	Factory factory;
 	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_bar;
+	Player player;
 	ObjectPool<Entity>::iterator currentCamera;
+	bool paused = false;
+	bool battle = false;
 public:
-	virtual void init()
+	
+	virtual void init(Player p)
 	{
 		spr_bullet = sfw::loadTextureMap("../res/bullet.png");
 		spr_space = sfw::loadTextureMap("../res/space.jpg");
@@ -31,10 +35,12 @@ public:
 		spr_roid = sfw::loadTextureMap("../res/rock.png");
 		spr_font = sfw::loadTextureMap("../res/font.png",32,4);
 		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
+		player = p;
 	}
 
 	virtual void play()
-	{
+	{	
+		
 		// delete any old entities sitting around
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
@@ -45,7 +51,7 @@ public:
 		// call some spawning functions!
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
-		factory.spawnPlayer(spr_ship, spr_font);
+		factory.spawnPlayer(spr_ship, spr_font, player);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
@@ -61,12 +67,22 @@ public:
 
 	// should return what state we're going to.
 	// REMEMBER TO HAVE ENTRY AND STAY states for each application state!
-	virtual size_t next() const { return 0; }
+	virtual size_t next() const
+	{
+		if (battle)
+			return 2;
+
+		else
+			return 1;
+	}
 
 
 	// update loop, where 'systems' exist
 	virtual void step()
 	{
+		battle = false;
+		if (!paused)
+		{ 
 		float dt = sfw::getDeltaTime();
 
 		// maybe spawn some asteroids here.
@@ -83,19 +99,8 @@ public:
 			// controller update
 			if (e.transform && e.rigidbody && e.controller)
 			{
-				if (getKey('F'))
-				{
-					char t[80];
-					cin >> t;
-					e.text->setString(t);
-				}
 				e.controller->poll(&e.transform, &e.rigidbody, dt);
 				currentCamera->transform->setGlobalPosition(e.transform->getGlobalPosition() + 300);
-				if (e.controller->shotRequest) // controller requested a bullet fire
-				{
-					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition()  + e.transform->getGlobalUp()*48,
-											vec2{ 32,32 }, e.transform->getGlobalAngle(), 200, 1);
-				}
 			}
 			// lifetime decay update
 			if (e.lifetime)
@@ -135,7 +140,8 @@ public:
 						{
 							// condition for dynamic resolution
 							if (it->rigidbody && bit->rigidbody)
-								base::DynamicResolution(cd,&it->transform,&it->rigidbody, &bit->transform, &bit->rigidbody);
+								battle = true;
+								//base::DynamicResolution(cd,&it->transform,&it->rigidbody, &bit->transform, &bit->rigidbody);
 							
 							// condition for static resolution
 							else if (it->rigidbody && !bit->rigidbody)							
@@ -143,7 +149,8 @@ public:
 						}
 					}
 				}
-
+		//p
+		}
 	}
 
 

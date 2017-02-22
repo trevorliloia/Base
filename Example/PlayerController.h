@@ -2,39 +2,37 @@
 
 #include "Base.h"
 #include "Entity.h"
+#include "Player.h"
 #include <iostream>
 using namespace std;
 using namespace sfw;
+using namespace base;
 
 class PlayerController
 {
 
 public:
-	float speed = 100, turnSpeed = 10;
-
-	float shotTimer = 0.0f;
-	bool shotRequest = false;
+	float speed = 100;
+	
+	Player player;
+	vec2 move;
 
 	void poll(base::Transform *T, base::Rigidbody *rb, float dt)
 	{
+		move = vec2{ 0,0 };
 		if (sfw::getKey('W'))
-			rb->addForce(T->getGlobalUp() * speed);
+			move.y += 3000;
+
+		else if (sfw::getKey('S'))
+			move.y -= 3000;
 
 		if (sfw::getKey('A'))
-			rb->addTorque(turnSpeed);
+			move.x -= 3000;
 
-		if (sfw::getKey('D'))
-			rb->addTorque(-turnSpeed);
+		else if (sfw::getKey('D'))
+			move.x += 3000;
 
-
-
-		shotTimer -= dt;
-		if (sfw::getKey(' ') && shotTimer < 0)
-		{
-			shotRequest = true;
-			shotTimer = 0.86f;
-		}
-		else shotRequest = false;
+		rb->addForce(move);
 
 	}
 

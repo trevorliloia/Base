@@ -15,6 +15,7 @@ class Factory
 	ObjectPool<Camera>    cameras;
 	ObjectPool<Text>	  texts;
 	ObjectPool<PlayerController> controllers;
+	ObjectPool<Enemy> enemies;
 
 public:
 
@@ -26,7 +27,7 @@ public:
 	Factory(size_t size = 512)
 								: entities(size), transforms(size), rigidbodies(size),
 								  colliders(size), sprites(size), lifetimes(size),
-								  cameras(size), controllers(size), texts(size)
+								  cameras(size), controllers(size), texts(size), enemies(size)
 	{
 	}
 
@@ -78,25 +79,57 @@ public:
 		return e;
 	}
 
-	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite, unsigned font)
+	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite, unsigned font, Player player)
 	{
 		auto e = entities.push();
 
 		e->transform = transforms.push();
+		
 		e->rigidbody = rigidbodies.push();
+		e->rigidbody->drag = 10;
 		e->sprite = sprites.push();
 		e->collider = colliders.push();
 		e->controller = controllers.push();
 		e->text = texts.push();
-
+		e->controller->player = player;
 		e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
 		e->text->off_scale = vec2{.5f,.5f};
-		e->text->setString("ship");
+		e->text->setString("Crono");
 
 		e->transform->setLocalScale(vec2{48,48});
 
 		e->sprite->sprite_id = sprite;
+
+		return e;
+	}
+
+	ObjectPool<Entity>::iterator spawnEnemy(unsigned sprite, unsigned font)
+	{
+		auto e = entities.push();
+
+		e->transform = transforms.push();
+		e->enemy = enemies.push();
+
+		e->rigidbody = rigidbodies.push();
+		e->rigidbody->drag = 10;
+		e->sprite = sprites.push();
+		e->collider = colliders.push();
+
+		e->text = texts.push();
+
+		e->text->sprite_id = font;
+		e->text->offset = vec2{ -24,-24 };
+		e->text->off_scale = vec2{ .5f,.5f };
+
+
+		e->text->setString("Gerblin");
+
+		e->transform->setLocalScale(vec2{ 48,48 });
+
+		e->sprite->sprite_id = sprite;
+
+		e->transform->setGlobalPosition(vec2::fromAngle(randRange(0, 360)*DEG2RAD)*((rand01()) * 200 + 64));
 
 		return e;
 	}

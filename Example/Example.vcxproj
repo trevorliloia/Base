@@ -126,9 +126,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BattleState.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
   </ItemGroup>
   <ItemGroup>
