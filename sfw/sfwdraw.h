@@ -73,14 +73,23 @@ NOTE: YOU MUST CALL initContext for any of the functions to work!
 // In RGBA color format
 // 0xRRGGBBAA -> FF is opaque, 00 totally invisible
 #define WHITE	 0xffffffff
+#define SILVER   0xc0c0c0ff
+#define GRAY     0x808080ff
 #define BLACK    0x000000ff
 #define CYAN	 0x00ffffff
+#define TEAL     0x008080ff
 #define MAGENTA  0xff00ffff
+#define PURPLE   0x990099ff
 #define YELLOW	 0xffff00ff
+#define BRELLOW  0x808000ff
 #define RED		 0xff0000ff
+#define MAROON   0x800000ff
 #define GREEN    0x00ff00ff
+#define LEAF     0x008000ff
 #define BLUE	 0x0000ffff
+#define NAVY     0x000080ff
 #define NONE     0x00000000
+#define ORANGE   0xff9900ff
 
 #define PI 3.14159265359
 

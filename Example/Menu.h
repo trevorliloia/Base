@@ -19,6 +19,7 @@ class Menu
 		int option;
 		UIText item;
 		bool pick = false;
+		int useID;
 	};
 public:
 	Transform menuPos;
@@ -41,6 +42,20 @@ public:
 			menuitems[i].option = i;
 			menuitems[i].item = items[i];
 			menuitems[i].item.sprite_id = font;
+		}
+		isVisible = visible;
+		isOpen = open;
+	}
+	Menu(Transform pos, int max, UIText items[64], bool visible, bool open, unsigned font, int id[64])
+	{
+		menuPos = pos;
+		maxItem = max;
+		for (int i = 0; i < maxItem; i++)
+		{
+			menuitems[i].option = i;
+			menuitems[i].item = items[i];
+			menuitems[i].item.sprite_id = font;
+			menuitems[i].useID = id[i];
 		}
 		isVisible = visible;
 		isOpen = open;

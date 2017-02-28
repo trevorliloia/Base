@@ -13,6 +13,7 @@ void main()
 {
 	sfw::initContext();
 	Player player;
+	player.invSize = 0;
 	int Gstate = 0;
 
 	GameState gs;

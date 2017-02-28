@@ -31,15 +31,19 @@ class BattleState : public BaseState
 	Menu baseM;
 
 	UIText attackText[3];
+	int atkID[3];
 	Menu attackM;
 
 	UIText techText[3];
+	int techID[3];
 	Menu techM;
 
 	UIText itemText[1];
+	int itemID[1];
 	Menu itemM;
 
 	UIText tacText[4];
+	int tacID[4];
 	Menu tacM;
 public:
 	bool paused = false;
@@ -50,6 +54,8 @@ public:
 
 	virtual void init(Player p)
 	{
+
+
 		spr_bullet = sfw::loadTextureMap("../res/bullet.png");
 		spr_space = sfw::loadTextureMap("../res/space.jpg");
 		spr_ship = sfw::loadTextureMap("../res/ship.png");
@@ -57,6 +63,7 @@ public:
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
 		player = p;
+		
 		menuI[0].setString("Attack");
 		menuI[1].setString("Tech");
 		menuI[2].setString("Items");
@@ -65,23 +72,35 @@ public:
 		baseM = Menu(menuP, 4, menuI, true, true, spr_font);
 
 		attackText[0].setString("Slash");
+		atkID[0] = 1;
 		attackText[1].setString("Pierce");
+		atkID[1] = 2;
 		attackText[2].setString("Charge");
-		attackM = Menu(menuP, 3, attackText, false, false, spr_font);
+		atkID[2] = 3;
+		attackM = Menu(menuP, 3, attackText, false, false, spr_font, atkID);
 
 		techText[0].setString("Fire Rush");
+		techID[0] = 4;
 		techText[1].setString("Spark Cut");
+		techID[1] = 5;
 		techText[2].setString("Heat Burst");
-		techM = Menu(menuP, 3, techText, false, false, spr_font);
+		techID[2] = 6;
+		techM = Menu(menuP, 3, techText, false, false, spr_font, techID);
 
 		itemText[0].setString("No Items");
 		itemM = Menu(menuP, 1, itemText, false, false, spr_font);
 
 		tacText[0].setString("Defend");
-		tacText[1].setString("Defend?");
-		tacText[2].setString("Defend!");
-		tacText[3].setString("Defend...");
-		tacM = Menu(menuP, 4, tacText, false, false, spr_font);
+		tacID[0] = 7;
+		tacText[1].setString("Charge Heat");
+		tacID[1] = 8;
+		tacText[2].setString("Counter");
+		tacID[2] = 9;
+		tacText[3].setString("Run");
+		tacID[3] = 10;
+		tacM = Menu(menuP, 4, tacText, false, false, spr_font, tacID);
+
+
 	}
 
 	virtual void play()
@@ -268,6 +287,62 @@ public:
 				baseM.isOpen = true;
 				baseM.isVisible = true;
 			}
+
+			for (int i = 0; i < attackM.maxItem; i++)
+			{
+				if (attackM.menuitems[i].pick)
+				{
+					switch (attackM.menuitems[i].useID)
+					{
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			for (int i = 0; i < techM.maxItem; i++)
+			{
+				if (techM.menuitems[i].pick)
+				{
+					switch (techM.menuitems[i].useID)
+					{
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			for (int i = 0; i < tacM.maxItem; i++)
+			{
+				if (tacM.menuitems[i].pick)
+				{
+					switch (tacM.menuitems[i].useID)
+					{
+					case 1:
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					case 4:
+						break;
+					default:
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -299,10 +374,15 @@ public:
 			cout << timers[i];
 		}
 
+		for (int k = 0; k <= player.heat; k++)
+		{
+			drawLine(25 + k, 20, 25 + k, 40, ORANGE);
+		}
 		for (int k = 0; k <= player.timer; k++)
 		{
 			drawLine(25 + k, 25, 25 + k, 45, WHITE);
 		}
+		
 
 		baseM.draw();
 		attackM.draw();
