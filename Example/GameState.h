@@ -52,10 +52,7 @@ public:
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
 		factory.spawnPlayer(spr_ship, spr_font, player);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
+		factory.spawnEnemy(spr_roid, spr_font, 1);
 
 		
 	}

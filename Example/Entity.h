@@ -22,7 +22,7 @@ public:
 	// example of a component in this project
 	ObjectPool<PlayerController>::iterator controller;
 	ObjectPool<Enemy>::iterator enemy;
-
+	int ID;
 	void onFree()
 	{
 		transform.free();

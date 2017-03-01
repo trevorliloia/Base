@@ -11,7 +11,7 @@ class Enemy
 {
 
 public:
-	char name[32] = "dinosaur";
+	char name[32] = "Hollow";
 	int hp = 50, hpMax = 50;
 	int mp = 50, mpMax = 50;
 	int atk = 15, atkMax = 15;

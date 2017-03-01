@@ -104,7 +104,7 @@ public:
 		return e;
 	}
 
-	ObjectPool<Entity>::iterator spawnEnemy(unsigned sprite, unsigned font)
+	ObjectPool<Entity>::iterator spawnEnemy(unsigned sprite, unsigned font, int EID)
 	{
 		auto e = entities.push();
 
@@ -130,7 +130,7 @@ public:
 		e->sprite->sprite_id = sprite;
 
 		e->transform->setGlobalPosition(vec2::fromAngle(randRange(0, 360)*DEG2RAD)*((rand01()) * 200 + 64));
-
+		e->ID = EID;
 		return e;
 	}
 

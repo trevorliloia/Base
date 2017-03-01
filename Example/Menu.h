@@ -100,6 +100,9 @@ public:
 					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 1) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
 					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 2) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
 					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 3) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
+					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 4) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
+					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 5) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
+					drawLine(menuPos.getGlobalPosition().x, (menuPos.getGlobalPosition().y - 6) - (i * 25), menuPos.getGlobalPosition().x + 30, menuPos.getGlobalPosition().y - (i * 25), RED);
 				}
 			}
 		}
