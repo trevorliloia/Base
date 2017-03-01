@@ -53,6 +53,8 @@ class BattleState : public BaseState
 public:
 	bool paused = false;
 	bool done = false;
+	bool won = false;
+	bool gameOver = false;
 	bool turn = true;
 	bool pickE = false;
 	Menu sourceM;
@@ -65,9 +67,9 @@ public:
 
 
 		spr_bullet = sfw::loadTextureMap("../res/bullet.png");
-		spr_space = sfw::loadTextureMap("../res/space.jpg");
-		spr_ship = sfw::loadTextureMap("../res/ship.png");
-		spr_roid = sfw::loadTextureMap("../res/rock.png");
+		spr_space = sfw::loadTextureMap("../res/space2.jpg");
+		spr_ship = sfw::loadTextureMap("../res/TARKUS.png");
+		spr_roid = sfw::loadTextureMap("../res/hollow2.png");
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
 		player = p;
@@ -124,19 +126,22 @@ public:
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
 		// setup a default camera
-		currentCamera = factory.spawnCamera(800, 600, 1);
+		currentCamera = factory.spawnCamera(800, 500, 1, vec2{0,100});
 		currentCamera->transform->setGlobalPosition(vec2{ 400, 300 });
 
 		// call some spawning functions!
-		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
+		factory.spawnStaticImage(spr_space, 0, 0, 800, 700);
 
-		factory.spawnPlayer(spr_ship, spr_font, player);
+		factory.spawnPlayer(spr_ship, spr_font, player, vec2{0, -100});
+		player.enemyCount = 3;
 		for (int i = 0; i < player.enemyCount; i++)
 		{
-			factory.spawnEnemy(spr_roid, spr_font, i + 1);
+			factory.spawnEnemy(spr_roid, spr_font, i + 1, vec2{ (-250.0f + (i * 180.0f)), 200.0f - (i * 80) });
 		}
 		
-
+		srand(time(NULL));
+		done = false;
+		won = false;
 	}
 
 	virtual void stop()
@@ -149,7 +154,13 @@ public:
 	virtual size_t next() const
 	{
 		if (done)
+			return 0;
+		
+		if (won)
 			return 1;
+
+		else if (gameOver)
+			return 7;
 
 		else
 			return 3;
@@ -179,7 +190,7 @@ public:
 				{
 					if (player.timer < 100)
 					{
-						player.timer += 1+(getDeltaTime() * (player.spd / 2));
+						player.timer += (getDeltaTime() * (player.spd / 2));
 					}
 					else if (player.timer > 100)
 					{
@@ -195,13 +206,61 @@ public:
 				{
 					if (e.enemy->timer < 100)
 					{
-						e.enemy->timer += 1+(getDeltaTime() * (e.enemy->spd / 2));
+						e.enemy->timer += (getDeltaTime() * (e.enemy->spd / 2));
 					}
 					else if (e.enemy->timer > 100)
 					{
 						e.enemy->timer = 100;
 					}
 					timers[d] = e.enemy->timer;
+
+					if (e.enemy->timer == 100 && e.enemy->hp > 0)
+					{
+						if (player.hp > 0)
+						{
+							if (player.defending)
+							{
+								player.hp -= (1 + (e.enemy->atk * 1 - (player.def / 50)));
+							}
+							else if (player.counter)
+							{
+								player.hp -= (1 + (e.enemy->atk * 1 - (player.def / 75)));
+								e.enemy->hp -= (1 + ((e.enemy->atk) * 1 + (player.atk / 100)));
+							}
+							else
+								player.hp -= (1 + (e.enemy->atk * 1 - (player.def / 100)));
+
+							if (player.hp < 0)
+							{
+								player.hp = 0;
+							}
+						}
+						else if (player.hp == 0 && player.heat > 0)
+						{
+							if (player.defending)
+							{
+								player.heat -= (1 + (e.enemy->atk * 1 - (player.def / 50)));
+							}
+							else if (player.counter)
+							{
+								player.heat -= (1 + (e.enemy->atk * 1 - (player.def / 75)));
+								e.enemy->hp -= (1 + ((e.enemy->atk) * 1 + (player.atk / 100)));
+							}
+							else
+								player.heat -= (1 + (e.enemy->atk * 1 - (player.def / 100)));
+
+							if (player.heat < 0)
+							{
+								player.heat = 0;
+							}
+						}
+						e.enemy->timer = 0;
+					}
+
+					if (player.hp == 0 && player.heat == 0)
+					{
+
+					}
 
 					for (int d = 1; d < 4; d++)
 					{
@@ -266,13 +325,19 @@ public:
 					}
 					
 
-
+					if (e.enemy->hp <= 0)
+					{
+						e.enemy->hp = 0;
+						del = true;
+						player.enemyCount -= 1;
+					}
+					
 
 					if (e.text)
 					{
 						char buffer[80];
 
-						sprintf_s(buffer, "%s\n%d", e.enemy->name, e.enemy->hp);
+						sprintf_s(buffer, "%s %d\n%d", e.enemy->name, e.ID, e.enemy->hp);
 						e.text->setString(buffer);
 					}
 					d++;
@@ -374,6 +439,8 @@ public:
 				{
 					if (player.timer == 100)
 					{
+						player.defending = false;
+						player.counter = false;
 						switch (attackM.menuitems[i].useID)
 						{
 						case 1:
@@ -410,6 +477,8 @@ public:
 				{
 					if (player.timer == 100)
 					{
+						player.defending = false;
+						player.counter = false;
 						switch (techM.menuitems[i].useID)
 						{
 						case 4:
@@ -451,11 +520,7 @@ public:
 						switch (tacM.menuitems[i].useID)
 						{
 						case 7: //Defend
-							if (player.defending = false)
-							{
-								player.def + (player.def * 1.2f);
-								player.defending = true;
-							}
+							player.defending = true;
 							player.timer = 0;
 							tacM.menuitems[i].pick = false;
 							break;
@@ -474,8 +539,9 @@ public:
 							tacM.menuitems[i].pick = false;
 							break;
 						case 10: //Run
-							done = true;
 							tacM.menuitems[i].pick = false;
+							done = true;
+							
 							break;
 						default:
 							break;
@@ -488,7 +554,11 @@ public:
 			}
 
 
-			//Pick Enemy
+			if (player.enemyCount == 0)
+			{
+				player.removeEnemy = true;
+				done = true;
+			}
 			
 
 		}
@@ -549,18 +619,6 @@ public:
 		tacM.draw();
 		enemyM.draw();
 
-#ifdef _DEBUG
-		for each(auto &e in factory)
-			if (e.transform)
-				e.transform->draw(cam);
 
-		for each(auto &e in factory)
-			if (e.transform && e.collider)
-				e.collider->draw(&e.transform, cam);
-
-		for each(auto &e in factory)
-			if (e.transform && e.rigidbody)
-				e.rigidbody->draw(&e.transform, cam);
-#endif
 	}
 };

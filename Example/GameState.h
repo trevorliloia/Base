@@ -30,9 +30,9 @@ public:
 	virtual void init(Player p)
 	{
 		spr_bullet = sfw::loadTextureMap("../res/bullet.png");
-		spr_space = sfw::loadTextureMap("../res/space.jpg");
-		spr_ship = sfw::loadTextureMap("../res/ship.png");
-		spr_roid = sfw::loadTextureMap("../res/rock.png");
+		spr_space = sfw::loadTextureMap("../res/space2.jpg");
+		spr_ship = sfw::loadTextureMap("../res/TARKUS.png");
+		spr_roid = sfw::loadTextureMap("../res/hollow2.png");
 		spr_font = sfw::loadTextureMap("../res/font.png",32,4);
 		spr_bar = sfw::loadTextureMap("../res/sidebar.png");
 		player = p;
@@ -45,14 +45,14 @@ public:
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
 		// setup a default camera
-		currentCamera = factory.spawnCamera(800, 600, 1);
+		currentCamera = factory.spawnCamera(800, 600, 1, vec2{0,0});
 		currentCamera->transform->setGlobalPosition(vec2{ 400, 300 });
 
 		// call some spawning functions!
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
-		factory.spawnPlayer(spr_ship, spr_font, player);
-		factory.spawnEnemy(spr_roid, spr_font, 1);
+		factory.spawnPlayer(spr_ship, spr_font, player, vec2{0,0});
+		factory.spawnEnemy(spr_roid, spr_font, 1, vec2{100.0f,100.0f});
 
 		
 	}
@@ -77,6 +77,8 @@ public:
 	// update loop, where 'systems' exist
 	virtual void step()
 	{
+		
+
 		battle = false;
 		if (!paused)
 		{ 
@@ -94,6 +96,16 @@ public:
 				e.rigidbody->integrate(&e.transform, dt);
 
 			// controller update
+			if (e.enemy)
+			{
+				if (player.removeEnemy)
+				{
+					player.removeEnemy = false;
+					del = true;
+				}	
+
+			}
+
 			if (e.transform && e.rigidbody && e.controller)
 			{
 				e.controller->poll(&e.transform, &e.rigidbody, dt);
@@ -106,7 +118,7 @@ public:
 				if (!e.lifetime->isAlive())
 					del = true;
 			}
-
+			
 			// ++ here, because free increments in case of deletions
 			if (!del) it++;
 			else
@@ -168,18 +180,6 @@ public:
 
 		drawTexture(spr_bar, 75, 300, 150, 600, 0, true, 0, BLACK);
 
-#ifdef _DEBUG
-		for each(auto &e in factory)
-			if (e.transform)
-				e.transform->draw(cam);
 
-		for each(auto &e in factory)
-			if (e.transform && e.collider)
-				e.collider->draw(&e.transform, cam);
-
-		for each(auto &e in factory)
-			if (e.transform && e.rigidbody)
-				e.rigidbody->draw(&e.transform, cam);
-#endif
 	}
 };

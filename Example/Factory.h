@@ -34,13 +34,14 @@ public:
 	// What follows are specialized spawning functions
 	// just observe the steps taken and replicate for your own usages
 
-	ObjectPool<Entity>::iterator spawnCamera(float w2, float h2, float zoom)
+	ObjectPool<Entity>::iterator spawnCamera(float w2, float h2, float zoom, vec2 pos)
 	{
 		auto e = entities.push();
 		e->transform = transforms.push();
 		e->camera = cameras.push();
 		e->camera->offset = vec2{w2,h2};
 		e->camera->scale = vec2{ zoom,zoom };
+		e->transform->setGlobalPosition(pos);
 		return e;
 	}
 
@@ -79,7 +80,7 @@ public:
 		return e;
 	}
 
-	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite, unsigned font, Player player)
+	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite, unsigned font, Player player, vec2 pos)
 	{
 		auto e = entities.push();
 
@@ -95,16 +96,16 @@ public:
 		e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
 		e->text->off_scale = vec2{.5f,.5f};
-		e->text->setString("Crono");
+		e->text->setString("Tarkus");
 
-		e->transform->setLocalScale(vec2{48,48});
+		e->transform->setLocalScale(vec2{90,90});
 
 		e->sprite->sprite_id = sprite;
-
+		e->transform->setGlobalPosition(pos);
 		return e;
 	}
 
-	ObjectPool<Entity>::iterator spawnEnemy(unsigned sprite, unsigned font, int EID)
+	ObjectPool<Entity>::iterator spawnEnemy(unsigned sprite, unsigned font, int EID, vec2 pos)
 	{
 		auto e = entities.push();
 
@@ -129,7 +130,7 @@ public:
 
 		e->sprite->sprite_id = sprite;
 
-		e->transform->setGlobalPosition(vec2::fromAngle(randRange(0, 360)*DEG2RAD)*((rand01()) * 200 + 64));
+		e->transform->setGlobalPosition(pos);
 		e->ID = EID;
 		return e;
 	}
