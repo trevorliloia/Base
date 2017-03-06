@@ -259,7 +259,7 @@ public:
 
 					if (player.hp == 0 && player.heat == 0)
 					{
-
+						done = true;
 					}
 
 					for (int d = 1; d < 4; d++)
@@ -274,22 +274,25 @@ public:
 									switch (tmpID)
 									{
 									case 1:
-										e.enemy->hp -= (1 + (player.atk * 1 - (e.enemy->def / 100)));
+										e.enemy->hp -= (1 + (player.atk * .75f - (e.enemy->def / 100)));
 										enemyM.isOpen = false;
 										attackM.isVisible = false;
 										techM.isVisible = false;
+										player.heat += 10;
 										break;
 									case 2:
-										e.enemy->hp -= (1 + ((player.atk * .75f) * 2 - (e.enemy->def / 100)));
+										e.enemy->hp -= (1 + ((player.atk * .5f) * 2 - (e.enemy->def / 100)));
 										enemyM.isOpen = false;
 										attackM.isVisible = false;
 										techM.isVisible = false;
+										player.heat += 10;
 										break;
 									case 3:
-										e.enemy->hp -= (1 + ((player.atk * 2) * 1 - (e.enemy->def / 50)));
+										e.enemy->hp -= (1 + ((player.atk * 1.5f) * 1 - (e.enemy->def / 50)));
 										enemyM.isOpen = false;
 										attackM.isVisible = false;
 										techM.isVisible = false;
+										player.heat += 10;
 										break;
 									case 4:
 										e.enemy->hp -= (1 + (player.mag * 1 - (e.enemy->def / 150)));
@@ -297,6 +300,7 @@ public:
 										enemyM.isOpen = false;
 										attackM.isVisible = false;
 										techM.isVisible = false;
+										player.heat += 20;
 										break;
 									case 5:
 										e.enemy->hp -= (1 + ((player.atk + player.mag) * .6f - (e.enemy->def / 200)));
@@ -304,6 +308,7 @@ public:
 										enemyM.isOpen = false;
 										attackM.isVisible = false;
 										techM.isVisible = false;
+										player.heat += 20;
 										break;
 									case 6:
 										e.enemy->hp -= (1 + (((player.atk + player.mag) / 2) + (player.heat / 2)) * 1 - (e.enemy->def / 200));

@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "BattleState.h"
 #include "GameOver.h"
+#include "MenuState.h"
 #include "Input.h"
 
 /*
@@ -16,16 +17,18 @@ void main()
 	Player player;
 	player.invSize = 0;
 	bool play = true;
-	int Gstate = 0;
+	int Gstate = 10;
 
 	GameState gs;
 	BattleState bs;
 	GameOver go;
+	MenuState ms;
 
 	
 	gs.init(player); // called once
 	bs.init(player);
 	go.init(player);
+	ms.init(player);
 
 	//gs.play(); // Should be called each time the state is transitioned into
 	//bs.play();
@@ -60,6 +63,14 @@ void main()
 
 		case 9:
 			play = false;
+			break;
+
+		case 10:
+			ms.play();
+		case 11:
+			ms.step();
+			ms.draw();
+			Gstate = ms.next();
 			break;
 		}
 		

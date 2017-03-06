@@ -98,7 +98,7 @@ public:
 		e->text->off_scale = vec2{.5f,.5f};
 		e->text->setString("Tarkus");
 
-		e->transform->setLocalScale(vec2{90,90});
+		e->transform->setLocalScale(vec2{65,70});
 
 		e->sprite->sprite_id = sprite;
 		e->transform->setGlobalPosition(pos);
