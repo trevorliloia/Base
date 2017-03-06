@@ -262,6 +262,7 @@ public:
 						done = true;
 					}
 
+
 					for (int d = 1; d < 4; d++)
 					{
 						for (int i = 0; i < enemyM.maxItem; i++)
